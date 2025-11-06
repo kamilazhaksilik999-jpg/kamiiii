@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Asia Airlines — путешествуй с нами</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+
+<style>
+:root{
+  --main: #800020;
+  --main-2: #4b0016;
+  --accent: #f8d210;
+  --bg: #faf7f7;
+  --card: #ffffff;
+  --text: #222;
+  --muted: #6b6b6b;
+  --container:1200px;
+  --radius:12px;
+  --ease: 260ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* base */
+*{box-sizing:border-box}
+html{font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto, "Helvetica Neue", Arial;line-height:1.45;color:var(--text);background:var(--bg);scroll-behavior:smooth}
+body{margin:0;padding:0;}
+
+/* container */
+.container{max-width:var(--container);margin:0 auto;padding:0 20px}
+
+/* header (сохраняем дизайн) */
+header{
+  background:linear-gradient(90deg,var(--main),var(--main-2));
+  color:#fff;position:sticky;top:0;z-index:60;box-shadow:0 2px 10px rgba(0,0,0,0.15)
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:1.45rem;letter-spacing:.2px}
+.logo span{color:var(--accent)}
+.header-actions{display:flex;align-items:center;gap:12px}
+
+/* small visual */
+.header-actions img{width:28px;height:28px;}
+
+/* меню-кнопка (под логотипом) */
+.menu-button {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+}
+.menu-button a {
+  color: #fff;
+  text-decoration: none;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* полноэкранное меню (CSS-only, :target) */
+.fullscreen-menu {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.96);
+  color:#fff;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:200;
+  padding:40px;
+  flex-direction:column;
+  text-align:center;
+}
+.fullscreen-menu .menu-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:18px; align-items:center; }
+.fullscreen-menu .menu-list a { color:#fff; font-size:1.45rem; text-decoration:none; }
+.fullscreen-menu .menu-close { position:absolute; top:20px; right:26px; font-size:2rem; color:#fff; text-decoration:none; }
+
+/* показываем, когда в url #menu */
+:target.fullscreen-menu { display:flex; }
+
+/* top-right small to-top button (kept) */
+.top-to-top{position:fixed;right:18px;top:14px;z-index:135}
+.top-to-top button{width:44px;height:44px;border-radius:10px;border:0;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,0.12);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.top-to-top svg{width:20px;height:20px;fill:var(--main)}
+
+/* hero (оставлен как в оригинале) */
+.hero{
+  background:
+    linear-gradient(rgba(128,0,32,0.58), rgba(0,0,0,0.45)),
+    url("https://i.pinimg.com/originals/b7/50/5e/b7505e89658ffb331cfc6117209a7307.jpg") center/cover no-repeat;
+  min-height:68vh;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;padding:40px 20px;
+}
+.hero-inner{max-width:900px}
+.hero h1{font-size:3rem;margin:0 0 10px;text-shadow: 2px 2px 10px rgba(0,0,0,0.65)}
+.hero p{font-size:1.15rem;margin-bottom:18px;opacity:.95}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:700;background:var(--accent);color:var(--main);box-shadow:0 8px 20px rgba(248,210,16,0.08);transition:transform var(--ease)}
+.btn-dark{background:var(--main);color:#fff}
+.btn:hover{transform:translateY(-4px)}
+
+/* sections */
+section{padding:56px 0;border-bottom:1px solid rgba(0,0,0,0.03)}
+.section-title{color:var(--main);text-align:center;font-size:1.35rem;margin-bottom:18px;font-weight:700}
+
+/* video placeholder */
+.video-wrapper{text-align:center}
+.video-wrapper img{width:100%;max-width:900px;border-radius:12px;display:block;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.08)}
+
+/* gallery - kept */
+.gallery-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:12px;
+  max-width:1200px;margin:0 auto;
+}
+.gallery-grid img{width:100%;height:170px;object-fit:cover;border-radius:10px;transition:transform .35s}
+.gallery-grid img:hover{transform:scale(1.03)}
+
+/* tours (original style preserved) */
+.tours{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;max-width:1200px;margin:0 auto}
+.tour{
+  width:260px;background:var(--card);border-radius:14px;box-shadow:0 8px 26px rgba(0,0,0,0.08);overflow:hidden;transition:transform .25s;
+}
+.tour img{width:100%;height:160px;object-fit:cover}
+.tour-body{padding:14px}
+.tour h3{margin:0;color:var(--main);font-size:1.05rem}
+.tour p{margin:8px 0;color:var(--muted);font-size:.95rem}
+.tour .price{font-weight:700;margin-top:8px}
+
+/* details (kept) */
+.details{max-width:1100px;margin:18px auto 0;background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.04)}
+.details p{margin:8px 0;color:var(--muted)}
+
+/* booking box (we'll keep visually, but non-JS) */
+.booking-wrapper{max-width:1100px;margin:0 auto;display:flex;align-items:stretch;gap:18px;justify-content:center;padding:8px}
+.booking-box{display:flex;gap:18px;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 26px rgba(0,0,0,0.08);border:2px solid rgba(128,0,32,0.06);width:100%;align-items:center;justify-content:space-between}
+.booking-form{flex:1;min-width:260px}
+.booking-form h3{color:var(--main);margin-top:0}
+.booking-form .row{display:flex;gap:10px}
+.booking-form input, .booking-form select{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:1px solid #ddd;font-size:1rem}
+.book-btn{background:var(--main-2);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;margin-top:12px;width:100%}
+.book-btn:hover{background:var(--main)}
+
+/* logo square */
+.logo-square{width:260px;min-width:220px;background:linear-gradient(180deg,var(--main),var(--main-2));color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:16px;box-shadow:0 10px 30px rgba(128,0,32,0.12);border:4px solid rgba(255,255,255,0.06)}
+.logo-square span{font-size:2.6rem;margin-top:8px}
+
+/* team */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1200px;margin:0 auto}
+.member{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.06);text-align:center;padding-bottom:14px}
+.member img{width:100%;height:220px;object-fit:cover}
+.member h4{color:var(--main);margin:12px 0 6px}
+.member p{margin:0 12px 12px;color:var(--muted)}
+.member.kamila img{object-position:center 60%}
+
+/* founders */
+.founders{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.founder{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.05)}
+.founder h3{color:var(--main);margin-bottom:8px}
+.founder p{color:var(--muted);line-height:1.6}
+
+/* reviews grid (we will transform to slider later, but keep base style) */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1200px;margin:0 auto}
+.review-card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.05)}
+.review-card p{font-style:italic;color:#333}
+.review-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:.9rem;color:var(--muted)}
+
+/* add-box */
+.add-box{display:flex;flex-direction:column;gap:8px;align-items:flex-start;background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.05);max-width:520px;margin:16px auto}
+.add-box input,.add-box textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:1rem}
+.add-box button{background:var(--main);color:#fff;padding:10px 12px;border-radius:8px;border:0;cursor:pointer}
+
+/* faq/blog/partners/map/footer (keep original FAQ details) */
+.faq{max-width:900px;margin:0 auto}
+.faq-item{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;box-shadow:0 4px 14px rgba(0,0,0,0.04)}
+.faq-item summary{font-weight:700;cursor:pointer}
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1200px;margin:0 auto}
+.blog-card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,0.05)}
+.map-wrap{max-width:1100px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+iframe.map{width:100%;height:380px;border:0}
+footer{background:linear-gradient(90deg,var(--main),var(--main-2));color:#fff;padding:28px 0;text-align:center}
+
+/* side panel and bottom-right mobile button */
+.side-panel{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:10px;z-index:130}
+.side-btn{width:52px;height:52px;border-radius:12px;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.12);cursor:pointer;border:0}
+.side-btn svg{width:26px;height:26px;display:block;fill:var(--main)}
+.side-btn:active{transform:scale(.98)}
+
+/* themes */
+.dark{--bg:#0b0b0b;--card:#0f0f10;--text:#f4f4f5;--muted:#bfbfbf}
+.high-contrast{--bg:#000;--card:#000;--text:#fff;--muted:#ddd;font-size:1.12rem}
+
+/* responsive */
+@media (max-width:1200px){.gallery-grid{grid-template-columns:repeat(3,1fr)}.team-grid{grid-template-columns:repeat(2,1fr)}.founders{grid-template-columns:1fr}.reviews-grid{grid-template-columns:repeat(2,1fr)}.blog-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:720px){
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .team-grid{grid-template-columns:1fr}
+  .tours{justify-content:flex-start;padding-left:12px}
+  .hero h1{font-size:2rem}
+  .hero p{font-size:.95rem}
+  .header-inner{gap:8px}
+  .booking-box{flex-direction:column;align-items:stretch}
+  .logo-square{width:100%;min-width:0}
+  .side-fixed-panel{right:8px;top:auto;bottom:78px;transform:none}
+  .top-to-top{right:8px;top:8px}
+}
+@media (min-width:1400px){.container{max-width:1400px}}
+/* ================== Доп. стили для CSS-слайдшоу отзывов ================== */
+/* мы сделаем отдельную секцию слайдшоу, сохранив тексты отзывов */
+.reviews-slider-wrap{max-width:1100px;margin:0 auto;padding:30px 20px}
+.reviews-slider{position:relative;overflow:hidden;border-radius:12px;background:var(--card);box-shadow:0 8px 30px rgba(0,0,0,0.06)}
+.reviews-slider .slides{display:flex;width:300%;transition:transform .5s ease}
+.reviews-slider .slide{flex:0 0 100%;padding:28px;box-sizing:border-box}
+.reviews-slider .slide p{font-style:italic;color:#222;font-size:1.05rem}
+.reviews-slider .review-meta{display:flex;justify-content:space-between;margin-top:12px;color:var(--muted);font-size:.95rem}
+.reviews-controls{position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:flex;gap:8px;z-index:10}
+.reviews-controls label{width:12px;height:12px;border-radius:50%;background:#ddd;display:inline-block;cursor:pointer}
+input[name="rev-slide"]{display:none}
+#rev1:checked ~ .reviews-slider .slides{transform:translateX(0%)}
+#rev2:checked ~ .reviews-slider .slides{transform:translateX(-33.3333%)}
+#rev3:checked ~ .reviews-slider .slides{transform:translateX(-66.6666%)}
+#rev1:checked ~ .reviews-controls label[for="rev1"],
+#rev2:checked ~ .reviews-controls label[for="rev2"],
+#rev3:checked ~ .reviews-controls label[for="rev3"]{background:var(--main)}
+
+/* ================== Модальное окно (CSS-only) для формы бронирования ================== */
+.modal-toggle{display:none}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:250;padding:20px}
+.modal-box{background:var(--card);width:100%;max-width:520px;border-radius:12px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,0.2)}
+.modal-toggle:checked ~ .modal-overlay{display:flex}
+.modal-close{display:inline-block;margin-top:12px;color:var(--main);cursor:pointer}
+
+/* ================== Блок "Почему выбирают нас" — изменяем белые кнопки на цифры ================== */
+.why-list{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.why-item{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(180deg,var(--card),#fcfcfc);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.03);min-width:180px}
+.why-number{width:40px;height:40px;border-radius:50%;background:var(--main);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.why-text{color:var(--muted);font-size:0.95rem}
+
+/* ================== Навигационное меню (вкладка с пунктами) ================== */
+.site-nav { display:flex; gap:12px; align-items:center; }
+.site-nav a { color: #fff; text-decoration:none; padding:8px 10px; border-radius:8px }
+.site-nav a:hover { background:rgba(255,255,255,0.06) }
+
+/* ================== Полноэкранный режим — реализован как overlay (доступно по #fullscreen) ================== */
+.fullscreen-mode {
+  position:fixed; inset:0; background:rgba(0,0,0,0.98); color:#fff; display:none; align-items:center; justify-content:center; z-index:300; padding:20px;
+}
+.fullscreen-mode .fs-close { position:absolute; top:18px; right:28px; color:#fff; font-size:1.8rem; text-decoration:none; }
+:target.fullscreen-mode { display:flex; }
+
+/* небольшая стилизация формы подписки / контактов для единообразия */
+.form-inline{display:flex;gap:8px;align-items:center}
+.form-inline input{padding:10px;border-radius:8px;border:1px solid #ddd}
+
+/* ===== адаптивные правки для маленьких экранов ===== */
+@media (max-width:900px){
+  .header-inner{padding:12px 14px}
+  .hero{min-height:54vh;padding:28px 16px}
+  .hero h1{font-size:2.2rem}
+}
+@media (max-width:720px){
+  .header-actions{display:none}
+  .menu-button{display:block}
+  .tours{justify-content:flex-start;padding-left:12px}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .team-grid{grid-template-columns:1fr}
+  .reviews-grid{grid-template-columns:1fr}
+  .founders{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header role="banner" aria-label="Верх сайта">
+  <div class="container header-inner">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo">Asia <span>Airlines</span></div>
+
+      <!-- Меню-кнопка под логотипом (как просила) -->
+      <div class="menu-button" aria-hidden="false" style="margin-left:10px;">
+        <a href="#menu" title="Открыть меню" aria-label="Открыть меню">☰ Меню</a>
+      </div>
+    </div>
+
+    <!-- Навигация (видна на больших экранах) -->
+    <nav class="site-nav" aria-label="Основная навигация">
+      <a href="#home">Главная</a>
+      <a href="#about">О компании</a>
+      <a href="#tours">Горячие туры</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#faq">Вопросы</a>
+      <a href="#contacts">Контакты</a>
+      <a href="#order">Заказать</a>
+      <a href="#fullscreen" title="Полноэкранный режим">⤢ Полноэкран</a>
+    </nav>
+
+    <div class="header-actions" aria-hidden="true">
+      <!-- В шапке — только иконки соцсетей -->
+      <a href="#" aria-label="Instagram" title="Instagram"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111423.png" alt="Instagram"></a>
+      <a href="#" aria-label="VK" title="VK"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111406.png" alt="VK"></a>
+      <a href="#" aria-label="Telegram" title="Telegram"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
+      <a href="#" aria-label="WhatsApp" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+    </div>
+  </div>
+</header>
+
+<!-- Полноэкранное меню (CSS-only, открывается по #menu) -->
+<div id="menu" class="fullscreen-menu" role="dialog" aria-modal="true" aria-label="Полноэкранное меню">
+  <a href="#home" class="menu-close" aria-label="Закрыть меню">✕</a>
+  <ul class="menu-list" role="menu" aria-hidden="false">
+    <li role="none"><a role="menuitem" href="#home">Главная</a></li>
+    <li role="none"><a role="menuitem" href="#about">О компании</a></li>
+    <li role="none"><a role="menuitem" href="#tours">Горячие туры</a></li>
+    <li role="none"><a role="menuitem" href="#gallery">Фотогалерея</a></li>
+    <li role="none"><a role="menuitem" href="#reviews">Отзывы</a></li>
+    <li role="none"><a role="menuitem" href="#faq">FAQ</a></li>
+    <li role="none"><a role="menuitem" href="#contacts">Контакты</a></li>
+    <li role="none"><a role="menuitem" href="#order">Заказать</a></li>
+  </ul>
+</div>
+
+<!-- Полноэкранный режим (overlay) — открывается по #fullscreen -->
+<div id="fullscreen" class="fullscreen-mode" role="dialog" aria-modal="true" aria-label="Полноэкранный режим">
+  <a class="fs-close" href="#home" aria-label="Выйти из полноэкранного режима">✕</a>
+  <div style="max-width:1200px;text-align:center;">
+    <h2 style="color:var(--accent);font-size:2.2rem;margin-bottom:8px">Asia Airlines — полноэкранный режим</h2>
+    <p style="color:#fff;opacity:.95;max-width:900px;margin:0 auto;">В этом режиме акцент на содержимое — удобный просмотр для презентаций и демонстраций. Нажмите ✕ в правом верхнем углу, чтобы выйти.</p>
+    <div style="margin-top:22px;">
+      <a href="#order" class="btn" style="background:#fff;color:var(--main);padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700">Перейти к бронированию</a>
+    </div>
+  </div>
+</div>
+
+<!-- Small to-top button in the top-right corner (kept for accessibility) -->
+<div class="top-to-top" aria-hidden="false">
+  <a href="#home" title="Наверх" aria-label="Наверх" style="display:inline-block;width:44px;height:44px;border-radius:10px;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center">
+    <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;fill:var(--main)"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+  </a>
+</div>
+
+<!-- HERO -->
+<section id="home" class="hero" role="region" aria-label="Приветственная секция">
+  <div class="hero-inner">
+    <h1>Asia Airlines</h1>
+    <p>Путешествия, которые вдохновляют. Комфортные перелёты, надёжные туры и уникальные маршруты по Азии и миру.</p>
+
+    <div class="cta-row" role="group" aria-label="Основные действия">
+      <a href="#order" class="btn" aria-label="Забронировать билет">✈️ Забронировать билет</a>
+      <a href="#tours" class="btn btn-dark" aria-label="Посмотреть горячие туры">🔥 Горячие туры</a>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+      <div class="badge" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 12px;border-radius:20px;font-weight:600">Гарантия лучшей цены</div>
+      <div class="badge" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 12px;border-radius:20px;font-weight:600">Поддержка 24/7</div>
+    </div>
+  </div>
+</section>
+
+<!-- Слайд после главной страницы — оставлен (большой баннер/слайд) -->
+<section id="lead-slide" role="region" aria-label="Основной слайд после главной">
+  <div style="background-image:url('https://i.pinimg.com/originals/b7/50/5e/b7505e89658ffb331cfc6117209a7307.jpg');background-size:cover;background-position:center;padding:60px 20px;color:#fff;text-align:center;">
+    <div style="max-width:1000px;margin:0 auto;">
+      <h2 style="font-size:2rem;margin-bottom:8px;text-shadow:2px 2px 8px rgba(0,0,0,0.5)">Откройте мир с нами</h2>
+      <p style="opacity:.95;margin-bottom:12px">Удобные перелёты, проверенные отели и индивидуальный подход. Спланируем любое путешествие — от короткого уикенда до продолжительных туров.</p>
+      <a href="#tours" class="btn btn-dark">Посмотреть туры</a>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO / DETAILS (как в оригинале) -->
+<section id="video-section" role="region" aria-label="Видео о путешествиях">
+  <div class="container">
+    <h2 class="section-title">Наслаждайтесь атмосферой путешествий</h2>
+    <div class="video-wrapper">
+      <img src="https://us.v-cdn.net/5021879/uploads/editor/ir/5uapco8xomd0.gif" alt="Атмосфера путешествий — анимация">
+    </div>
+
+    <div class="details">
+      <h3>Почему клиенты выбирают нас</h3>
+      <p>Asia Airlines — это сочетание комфортного сервиса, прозрачных цен и индивидуального подхода. Мы предлагаем удобные стыковки, проверенные отели, гибкие условия обмена и возврата билетов, а также поддержку на всех этапах путешествия.</p>
+      <p>Наши менеджеры подберут лучший маршрут и помогут оформить визу и страховку при необходимости.</p>
+
+      <!-- Блок "Почему выбирают нас" — заменяем белые кнопки на цифры -->
+      <div style="margin-top:12px" class="why-list" aria-hidden="false">
+        <div class="why-item">
+          <div class="why-number">1</div>
+          <div class="why-text">Прозрачные цены и выгодные предложения</div>
+        </div>
+        <div class="why-item">
+          <div class="why-number">2</div>
+          <div class="why-text">Поддержка 24/7 — до и после бронирования</div>
+        </div>
+        <div class="why-item">
+          <div class="why-number">3</div>
+          <div class="why-text">Проверенные партнёры и отели</div>
+        </div>
+        <div class="why-item">
+          <div class="why-number">4</div>
+          <div class="why-text">Гарантии и страхование поездок</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY (оставляем как есть) -->
+<section id="gallery" role="region" aria-label="Фотогалерея">
+  <div class="container">
+    <h2 class="section-title">Фотогалерея</h2>
+
+    <div class="gallery-grid" role="list">
+      <img role="listitem" src="https://i.pinimg.com/736x/46/db/d7/46dbd7f9c2717ac0d3a2881dbbba63cf.jpg" alt="Фото 1 — авиация">
+      <img role="listitem" src="https://kakogo-chisla.ru/wp-content/uploads/2022/04/Pochemu-vazhen-Mezhdunarodnyj-den-grazhdanskoj-aviatsii-2048x1152.jpg" alt="Фото 2 — аэропорт">
+      <img role="listitem" src="https://avatars.mds.yandex.net/i?id=282095a10a0d5afc83bf09081061ae9f_l-5209846-images-thumbs&n=13" alt="Фото 3 — самолет">
+      <img role="listitem" src="https://avatars.mds.yandex.net/i?id=db6dfabfbab4867305a97bdc53860a92_l-6950859-images-thumbs&n=13" alt="Фото 4 — виды">
+    </div>
+
+    <p style="text-align:center;margin-top:14px;color:var(--muted)">Оставлены только уникальные фотографии — без повторов.</p>
+  </div>
+</section>
+
+<!-- TOURS (Горячие туры) -->
+<section id="tours" role="region" aria-label="Горячие туры">
+  <div class="container">
+    <h2 class="section-title">Горячие туры</h2>
+
+    <div class="tours" role="list">
+      <article class="tour" role="listitem" aria-label="Тур: Сеул">
+        <img src="https://avatars.mds.yandex.net/i?id=4964d506d31c241efd392c895d5e1828_l-9245471-images-thumbs&n=13" alt="Тур в Сеул">
+        <div class="tour-body">
+          <h3>Сеул — 7 дней</h3>
+          <p>Культурный центр Кореи: музеи, улицы Инсадон и современные небоскрёбы.</p>
+          <div class="price">от 299 000 ₸</div>
+        </div>
+      </article>
+
+      <article class="tour" role="listitem" aria-label="Тур: Бангкок">
+        <img src="https://avatars.mds.yandex.net/i?id=0d4756581f229f5825ba4040cae80287_l-4402845-images-thumbs&n=13" alt="Тур в Бангкок">
+        <div class="tour-body">
+          <h3>Бангкок — 6 дней</h3>
+          <p>Экзотика, храмы, уличная еда и плавучие рынки.</p>
+          <div class="price">от 269 000 ₸</div>
+        </div>
+      </article>
+
+      <article class="tour" role="listitem" aria-label="Тур: Япония">
+        <img src="https://cdn.culture.ru/images/16445445-ffab-500b-852d-561f37f40877" alt="Тур в Японию">
+        <div class="tour-body">
+          <h3>Япония — 10 дней</h3>
+          <p>Токио, Киото, храмы и современные технологии.</p>
+          <div class="price">от 599 000 ₸</div>
+        </div>
+      </article>
+
+      <article class="tour" role="listitem" aria-label="Тур: Тайланд">
+        <img src="https://i.pinimg.com/736x/56/4f/2d/564f2db1fd6f7b4a00d2130a002ed1e5.jpg" alt="Тур в Тайланд">
+        <div class="tour-body">
+          <h3>Тайланд — 8 дней</h3>
+          <p>Райские пляжи, SPA, острова и морские прогулки.</p>
+          <div class="price">от 349 000 ₸</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="details">
+      <h3>Детали горячих туров</h3>
+      <p>Горячие туры формируются по принципу лучших комбинаций перелёт+отель+трансфер. Цены динамичные — уточняйте перед бронированием.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING — форма бронирования (с имитацией модального окна через чекбокс) -->
+<section id="order" role="region" aria-label="Бронирование билета">
+  <div class="container">
+    <h2 class="section-title">Бронирование билета</h2>
+
+    <div class="booking-wrapper">
+      <div class="booking-box" role="group" aria-label="Бокс бронирования">
+        <!-- отображаем короткую форму, кнопка открывает модальное окно -->
+        <div class="booking-form" aria-label="Форма бронирования">
+          <h3>Заполните форму</h3>
+          <div class="row">
+            <input id="name" type="text" placeholder="Имя" aria-required="true">
+            <input id="email" type="email" placeholder="Email" aria-required="true">
+          </div>
+
+          <div style="margin-top:10px;">
+            <select id="direction" aria-label="Выберите направление">
+              <option value="">Выберите направление</option>
+              <option>Сеул</option><option>Бангкок</option><option>Япония</option><option>Тайланд</option>
+            </select>
+          </div>
+
+          <div style="margin-top:10px;display:flex;gap:10px;">
+            <input id="date" type="date" aria-label="Дата поездки">
+            <input id="seats" type="number" min="1" placeholder="Кол-во пассажиров" aria-label="Количество пассажиров" style="width:140px">
+          </div>
+
+          <!-- открываем модалку через checkbox -->
+          <label for="modal-toggle" class="book-btn" style="display:inline-block;text-align:center;cursor:pointer">✈️ Открыть форму</label>
+
+          <p style="margin-top:12px;color:var(--muted);font-size:.95rem">Примечание: форма работает в режиме отправки на сервер при наличии backend. Здесь показана имитация модального окна без JS.</p>
+        </div>
+
+        <div class="logo-square" aria-hidden="true">
+          <div style="font-weight:700;font-size:1.1rem">Asia</div>
+          <span>Airlines ✈️</span>
+          <div style="font-size:.85rem;margin-top:8px;color:rgba(255,255,255,0.9)">Комфорт. Доверие. Путешествия</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1100px;margin:18px auto;color:var(--muted)">
+      <h3>Условия бронирования</h3>
+      <ul style="margin-left:18px;color:var(--muted)">
+        <li>Бронирование подтверждается после платежа.</li>
+        <li>Бесплатная отмена в течение 24 часов (если применимо к тарифу).</li>
+        <li>Поддержка 24/7 — мы поможем с изменениями в маршруте.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Модальное окно (CSS-only) -->
+  <input type="checkbox" id="modal-toggle" class="modal-toggle" />
+  <div class="modal-overlay" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-label="Форма бронирования (модальное окно)">
+      <h3 style="color:var(--main);margin-top:0">Форма бронирования</h3>
+      <form action="#" method="post" style="display:flex;flex-direction:column;gap:10px">
+        <input type="text" name="fullname" placeholder="Ваше имя" required style="padding:10px;border-radius:8px;border:1px solid #ddd">
+        <input type="email" name="email" placeholder="Email" required style="padding:10px;border-radius:8px;border:1px solid #ddd">
+        <select name="direction" style="padding:10px;border-radius:8px;border:1px solid #ddd">
+          <option>Сеул</option><option>Бангкок</option><option>Япония</option><option>Тайланд</option>
+        </select>
+        <div style="display:flex;gap:8px">
+          <input type="date" name="date" style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
+          <input type="number" name="seats" placeholder="Пасс." min="1" style="width:90px;padding:10px;border-radius:8px;border:1px solid #ddd">
+        </div>
+        <button type="submit" class="book-btn" style="width:100%">Отправить</button>
+      </form>
+      <label for="modal-toggle" class="modal-close">Закрыть</label>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" role="region" aria-label="Наша команда">
+  <div class="container">
+    <h2 class="section-title">Наша команда</h2>
+
+    <div class="team-grid" role="list">
+      <div class="member" role="listitem" aria-label="Нургуль — Менеджер по клиентам">
+        <img src="https://kubnews.ru/upload/resize_cache/iblock/882/1200_800_2/6rk29dt7951asmo82ifjzhdsapswjw80.jpg" alt="Нургуль — менеджер">
+        <h4>Нургуль</h4>
+        <p>Менеджер по клиентам — направляет запросы, помогает с визой и решает организационные вопросы. Опыт работы с туристами: 6 лет.</p>
+      </div>
+
+      <div class="member" role="listitem" aria-label="Алина — Руководитель отдела продаж">
+        <img src="https://avatars.mds.yandex.net/get-shedevrum/12370558/0000aa7232d411eea5441282c0ba7723/orig" alt="Алина — руководитель отдела продаж">
+        <h4>Алина</h4>
+        <p>Руководитель отдела продаж — формирует выгодные турпакеты и следит за качеством предложений.</p>
+      </div>
+
+      <div class="member" role="listitem" aria-label="Али — Главный пилот">
+        <img src="https://i2.wp.com/assets.paramountbusinessjets.com/media/uploaded-files/Pilot-salary-04.jpg" alt="Али — главный пилот">
+        <h4>Али</h4>
+        <p>Главный пилот — отвечает за безопасность перелётов и обучение экипажа.</p>
+      </div>
+
+      <div class="member kamila" role="listitem" aria-label="Камила — Директор компании">
+        <img src="https://i.pinimg.com/736x/29/68/00/296800cff9e22e38124f0b4749ac209e.jpg" alt="Камила — директор">
+        <h4>Камила</h4>
+        <p>Директор компании — стратег и лидер компании. Вдохновляет команду и движет развитие бренда.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;max-width:1100px;margin-left:auto;margin-right:auto;color:var(--muted)">
+      <p>Наша команда — профессионалы в авиации и туризме, которые помогут вам на каждом этапе путешествия.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS -->
+<section id="founders" role="region" aria-label="Основатели и их биографии">
+  <div class="container">
+    <h2 class="section-title">Основатели</h2>
+
+    <div class="founders">
+      <article class="founder" aria-label="Камила — Биография">
+        <h3>Камила (1996) — Идейный лидер и сооснователь</h3>
+        <p><strong>Камила</strong> родилась с мечтой соединять людей и культуры. После окончания университета по направлению управления и туризма она начала работать менеджером в крупной авиакомпании. В 2019 году основала Asia Airlines с целью сделать путешествия доступными и комфортными для жителей региона. Под её руководством компания внедрила удобную онлайн-платформу и сервис поддержки 24/7.</p>
+        <p>Камила увлекается устойчивым туризмом и сотрудничает с локальными сообществами.</p>
+      </article>
+
+      <article class="founder" aria-label="Дулат — Биография">
+        <h3>Дулат (1995) — Технологический сооснователь</h3>
+        <p><strong>Дулат</strong> — инженер по образованию и технический директор компании. Он отвечает за разработку систем бронирования и интеграцию с партнёрами. До основания Asia Airlines Дулат работал над проектами логистики и автоматизации.</p>
+        <p>Дулат любит кодить и экспериментировать с новыми веб-технологиями.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS — сохраняем тексты и превращаем в CSS-слайдшоу -->
+<section id="reviews" role="region" aria-label="Отзывы клиентов">
+  <div class="container">
+    <h2 class="section-title">Отзывы наших клиентов (живые)</h2>
+
+    <!-- радиокнопки для управления слайдером -->
+    <input type="radio" name="rev-slide" id="rev1" checked>
+    <input type="radio" name="rev-slide" id="rev2">
+    <input type="radio" name="rev-slide" id="rev3">
+
+    <div class="reviews-slider-wrap">
+      <div class="reviews-slider" aria-hidden="false">
+        <div class="slides">
+          <div class="slide">
+            <p>"Полёт прошёл отлично, сервис на высшем уровне! Спасибо за организацию тура в Японию."</p>
+            <div class="review-meta"><span>— Анна</span><span class="time">2 дня назад</span></div>
+          </div>
+          <div class="slide">
+            <p>"Покупали билеты в Бангкок — всё оперативно и удобно. Рекомендую!"</p>
+            <div class="review-meta"><span>— Рустем</span><span class="time">5 дней назад</span></div>
+          </div>
+          <div class="slide">
+            <p>"Asia Airlines — теперь мой выбор №1. Отличный персонал и условия."</p>
+            <div class="review-meta"><span>— Алия</span><span class="time">1 неделя назад</span></div>
+          </div>
+        </div>
+
+        <div class="reviews-controls" aria-hidden="false">
+          <label for="rev1" aria-label="Показать отзыв 1"></label>
+          <label for="rev2" aria-label="Показать отзыв 2"></label>
+          <label for="rev3" aria-label="Показать отзыв 3"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="add-box" aria-label="Добавить отзыв">
+      <input id="reviewName" type="text" placeholder="Ваше имя" aria-label="Ваше имя">
+      <textarea id="newReview" rows="3" placeholder="Ваш отзыв..." aria-label="Ваш отзыв"></textarea>
+      <button type="button" disabled style="background:#ccc;cursor:not-allowed">Добавить отзыв </button>
+      <p id="reviewMsg" style="color:var(--muted);font-size:.95rem;margin-top:8px"></p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ — Оставляем без изменений (используем <details> как в исходнике) -->
+<section id="faq" role="region" aria-label="Вопросы и ответы">
+  <div class="container">
+    <h2 class="section-title">FAQ — Частые вопросы</h2>
+  <details class="faq-item" role="listitem">
+    <summary>Как купить билет?</summary>
+    <p>Вы можете купить билет на официальном сайте Asia Airlines или через мобильное приложение, выбрав направление и удобное время вылета.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Как вернуть билет?</summary>
+    <p>Возможность возврата зависит от тарифа. Как правило, в течение 24 часов возможна бесплатная отмена. Для уточнения обратитесь в службу поддержки.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Можно ли изменить дату полёта?</summary>
+    <p>Да, изменения возможны с учётом условий тарифа. Гибкие тарифы позволяют менять дату с минимальной комиссией.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Как зарегистрироваться на рейс онлайн?</summary>
+    <p>Онлайн-регистрация открывается за 24 часа до вылета и закрывается за 2 часа. Введите номер брони и фамилию на сайте или в приложении.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Что делать, если я потерял билет?</summary>
+    <p>Ваш билет сохраняется в системе. Просто войдите в личный кабинет или предъявите паспорт на стойке регистрации.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Сколько багажа можно взять бесплатно?</summary>
+    <p>В эконом-классе — 1 место до 20 кг, в бизнес-классе — 2 места до 32 кг. Ручная кладь — до 7 кг.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Можно ли взять животных на борт?</summary>
+    <p>Да, перевозка животных разрешена по предварительному запросу. Количество мест для питомцев ограничено.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Есть ли питание на борту?</summary>
+    <p>На всех рейсах Asia Airlines предоставляется бесплатное питание и напитки. В бизнес-классе доступно расширенное меню.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Как получить компенсацию за задержку рейса?</summary>
+    <p>Если рейс задержан более чем на 3 часа, вы можете подать запрос на компенсацию через форму обратной связи или обратиться к представителю в аэропорту.</p>
+  </details>
+
+  <details class="faq-item" role="listitem">
+    <summary>Как связаться со службой поддержки?</summary>
+    <p>Позвоните по номеру 8-800-555-00-77, напишите на support@asiaairlines.com или используйте онлайн-чат на сайте.</p>
+  </details>
+</section>
+
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog" role="region" aria-label="Блог и полезные статьи">
+  <div class="container">
+    <h2 class="section-title">Полезные статьи и гиды</h2>
+
+    <div class="blog-grid" role="list">
+      <article class="blog-card" role="listitem">
+        <h4>Как подготовиться к первому перелёту</h4>
+        <p style="color:var(--muted)">Советы по упаковке, выбору места и преодолению тревоги в самолёте.</p>
+      </article>
+
+      <article class="blog-card" role="listitem">
+        <h4>Лучшие маршруты для отдыха в Азии</h4>
+        <p style="color:var(--muted)">Топ-10 направлений и сезонные рекомендации.</p>
+      </article>
+
+      <article class="blog-card" role="listitem">
+        <h4>Как экономить при бронировании туров</h4>
+        <p style="color:var(--muted)">Хитрости поиска выгодных предложений и гибкие даты.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section id="partners" role="region" aria-label="Партнёры и сертификаты">
+  <div class="container">
+    <h2 class="section-title">Наши партнёры</h2>
+    <p style="text-align:center;color:var(--muted)">Мы сотрудничаем с проверенными партнёрами по всему миру.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px">
+      <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.05)">Отель «Оазис Вилладж»</div>
+      <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.05)">Инвестор Aurora Capital</div>
+      <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.05)">Авиакомпания SkyLink Air</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS — сохраняем гугл-карту на месте -->
+<section id="contacts" role="region" aria-label="Контакты и карта">
+  <div class="container">
+    <h2 class="section-title">Наш офис</h2>
+    <div class="map-wrap">
+      <!-- Google Map оставлена как в исходнике -->
+      <iframe class="map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243.976656454073!2d71.42781787719715!3d51.12843337173098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4245812c4d28dc37%3A0x4f3caa1ab52b3c0a!2z0YPQuy4g0J3QtdC_0YDQsNC90LjRjywgMTIsINCi0LDRgNGF0L7QtNC90YHQutCwLCDQmtC40LXQsiwgMDIwMDAw!5e0!3m2!1sru!2skz!4v1696666666666"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;align-items:flex-start">
+      <div style="flex:1;min-width:260px">
+        <h4>Адрес</h4>
+        <p style="color:var(--muted)">г. Алматы, ул. Примерная, 12</p>
+        <h4>Телефон</h4>
+        <p style="color:var(--muted)">+7 (700) 000-00-00</p>
+        <h4>Email</h4>
+        <p style="color:var(--muted)">info@asia-airlines.kz</p>
+      </div>
+
+      <div style="flex:1;min-width:260px">
+        <h4>График работы</h4>
+        <p style="color:var(--muted)">Пн–Вс: 09:00 — 21:00 (поддержка 24/7 онлайн)</p>
+        <h4>Подписка</h4>
+        <p style="color:var(--muted)">Подпишись на новости и получай промокоды и ранний доступ к акциям.</p>
+        <form id="subscribeForm" style="display:flex;gap:8px;flex-wrap:wrap" method="post" action="#">
+          <input id="subscribeEmail" name="email" type="email" placeholder="Email для подписки" style="padding:10px;border-radius:8px;border:1px solid #ddd" aria-label="Email для подписки">
+          <button type="submit" style="background:var(--main);color:#fff;border:0;padding:10px 12px;border-radius:8px;cursor:pointer">Подписаться</button>
+        </form>
+        <p id="subscribeMsg" style="color:var(--muted);margin-top:8px"></p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <div class="container">
+    <p>©️ 2025 Asia Airlines | Все права защищены</p>
+    <p style="color:rgba(255,255,255,0.85);margin-top:6px">Разработка и поддержка — внутренняя команда Asia Airlines</p>
+  </div>
+</footer>
+<!-- bottom-right: mobile view button only -->
+<div class="side-panel" aria-hidden="false" aria-label="Панель мобильного вида">
+  <a class="side-btn" href="#home" data-tip="Мобильный вид" title="Мобильный вид" aria-label="Мобильный вид" style="display:flex;align-items:center;justify-content:center">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm5 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="var(--main)"/></svg>
+  </a>
+</div>
+</body>
+</html>
